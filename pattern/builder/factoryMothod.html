@@ -1,0 +1,91 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+工厂方法：
+定义一个创建产品对象的工厂接口，将实际创建工作推迟到子类当中
+示例：创建某品牌(如htc)下某操作系统(如winphone)的手机
+</div>
+<div id='info'></div>
+<script>
+	var OS_ENUM = {
+		android : 'android',
+		iphone : 'iphone',
+		winPhone : 'winPhone'
+	}
+
+	var BRAND_ENUM = {
+		samsung : 'samsung',
+		apple : 'apple',
+		microsoft : 'microsoft',
+		htc : 'htc'
+	}
+
+	function Phone(brand, os) {
+		this.brand = brand;
+		this.os= os;
+	}
+
+	Phone.prototype.description = function() {
+		var p = ""
+		for(var each in this) {
+			if(typeof(this[each]) == 'function') continue;
+			p += this[each] + ' ';
+		}
+		p +="<br/>";
+
+		return p;
+	}
+
+
+	function WinPhone() {
+		Phone.call(this, OS_ENUM.winPhone, BRAND_ENUM.microsoft)
+	}
+
+	WinPhone.prototype = new Phone()
+
+	function IPhone() {
+		Phone.call(this, OS_ENUM.iphone, BRAND_ENUM.apple)
+	}
+
+	IPhone.prototype = new Phone()
+
+	function Android() {
+		Phone.call(this, OS_ENUM.android, BRAND_ENUM.samsung)
+	}
+
+	Android.prototype = new Phone()
+
+	/*定义工厂接口
+		var factoryMethod = {
+		 	Phone create() // return phone;
+		}
+		
+	*/
+
+	var winFactory = {
+		create : function() {
+			return new WinPhone();
+		}
+	}
+	
+
+	var appleFactory = {
+		create : function() {
+			return new IPhone();
+		}
+	}
+
+	var androidFactory = {
+		create : function() {
+			return new Android();
+		}
+	}
+/**************************************client*********************************/
+	var p = winFactory.create();
+	var x = appleFactory.create();
+	var t = androidFactory.create();
+
+	$('#info').append(p.description());
+	$('#info').append(x.description());
+	$('#info').append(t.description());
+</script>

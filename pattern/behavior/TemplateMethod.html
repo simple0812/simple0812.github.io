@@ -1,0 +1,69 @@
+<script src='/js/jquery.js'></script>
+<script src='/js/underscore.js'></script>
+<script src='/js/utils.js'></script>
+<meta charset="utf-8" />
+<div>
+模版方法模式：
+将部分逻辑以具体方法以及具体构造函数的形式实现，然后声明一些抽象方法来迫使子类实现剩余的逻辑。不同的子类可以以不同的方式实现这些抽象方法，从而对剩余的逻辑有不同的实现。这就是模板方法模式的用意。<br/>
+示例:奶茶制作
+</div>
+<div id='info'></div>
+<script>
+	function MilkyTea() {
+		this.name = 'milky tea';
+	}
+
+	MilkyTea.prototype.getCup = function(isBig) {
+		return isBig ? '大杯' : '小杯';
+	}
+
+	MilkyTea.prototype.addAdditive = function() {
+		return ''
+	}
+
+	MilkyTea.prototype.addWater = function() {
+		return 'water'
+	}
+
+	MilkyTea.prototype.mix = function() {
+		return '制作完成';
+	}
+
+	MilkyTea.prototype.generate = function() {
+		var cup = this.getCup();
+		var additive = this.addAdditive();
+		this.addWater();
+		var ret = this.mix();
+
+		return cup + additive + ret + '<br/>'; 
+	}
+
+	//原味
+	function OriginalMilkyTea() {
+		MilkyTea.call(this)
+		this.name = 'original milky tea';
+	}
+	utils.extend(OriginalMilkyTea, MilkyTea);
+
+	OriginalMilkyTea.prototype.addAdditive = function() {
+		return '原味';
+	}
+
+	//椰果
+	function YeGuoMilkyTea() {
+		MilkyTea.call(this)
+		this.name = 'original milky tea';
+	}
+	utils.extend(YeGuoMilkyTea, MilkyTea);
+
+	YeGuoMilkyTea.prototype.addAdditive = function() {
+		return '椰果';
+	}
+
+	/******************************client*********************************/
+	var orig = new OriginalMilkyTea();
+	var yeGuo = new YeGuoMilkyTea();
+
+	$('#info').append(orig.generate());
+	$('#info').append(yeGuo.generate());
+</script>

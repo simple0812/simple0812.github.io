@@ -1,0 +1,40 @@
+<script src='/js/jquery.js'></script>
+<script src='/js/utils.js'></script>
+<meta charset="utf-8" />
+<div>
+原型模式：
+由当前对象直接clone一个对象，避免该对象的再次初始化。
+示例：坦克大战
+</div>
+<div id='info'></div>
+<script>
+	function Tank(hg, attack) {
+		this.hg = hg;
+		this.attack = attack;
+		this.x = 0;
+		this.y = 0;
+		this.name = ''
+	}
+
+	Tank.prototype.setPosition = function(x, y) {
+		this.x = x;
+		this.y = y;
+	}	
+
+	Tank.prototype.clone = function() {
+		return utils.deepCopy(this)
+	}
+
+	function TankA(hg, attack) {
+		Tank.call(this, hg, attack)
+		this.name = 'A';
+	}
+
+	utils.extend(TankA, Tank)
+/**************************************client*********************************/
+	var p = new TankA(1000, 10)
+	var x = p.clone()
+	$('#info').append(x.x + '<br/>')
+	x.setPosition(100, 10)
+	$('#info').append(x.x + '<br/>')
+</script>

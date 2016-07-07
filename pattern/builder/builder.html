@@ -1,0 +1,163 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+建造者模式：
+将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。
+示例：用屏幕、电池、cpu等组装手机
+</div>
+<div id='info'></div>
+<script>
+	var OS_ENUM = {
+		android : 'android',
+		iphone : 'iphone',
+		winPhone : 'winPhone'
+	}
+
+	var BRAND_ENUM = {
+		samsung : 'samsung',
+		apple : 'apple',
+		microsoft : 'microsoft',
+		htc : 'htc'
+	}
+
+	/*
+		定义phone基类
+	*/
+	function Phone(screen, cpu, battery) {
+		this.screen = screen || '';
+		this.cpu = cpu || '';
+		this.battery = battery || '';
+	}
+
+	Phone.prototype.description = function() {
+		var p = ""
+		for(var each in this) {
+			if(typeof(this[each]) == 'function') continue;
+			p += this[each] + ' ';
+		}
+		p +="<br/>";
+
+		return p;
+	}
+
+	function WinPhone() {
+		var args = Array.prototype.slice.call(arguments, 0)
+		Phone.call(this, args)
+	}
+
+	WinPhone.prototype = new Phone()
+
+	function IPhone() {
+		var args = Array.prototype.slice.call(arguments, 0)
+		Phone.call(this, args)
+	}
+
+	IPhone.prototype = new Phone()
+
+	function Android() {
+		var args = Array.prototype.slice.call(arguments, 0)
+		Phone.call(this, args)
+	}
+
+	Android.prototype = new Phone()
+
+
+	/*
+	定义builder抽象类
+	var builder = {
+		builderScreen:function(){},
+		builderCpu:function(){},
+		builderBattery:function(){},
+		getResult:function() {} //return phone
+	}
+
+	var builder = {
+		void builderScreen();
+		void builderCpu();
+		void builderBattery();
+		Phone getResult();
+	}
+	*/
+
+	function WinBuilder() {
+		this.phone = new WinPhone();
+	}
+
+	WinBuilder.prototype.builderScreen = function() {
+		this.phone.screen += "win phone screen "
+	}
+
+	WinBuilder.prototype.builderCpu = function() {
+		this.phone.cpu += "win phone cpu "
+	}
+
+	WinBuilder.prototype.builderBattery = function() {
+		this.phone.battery += "win phone battery "
+	}
+
+	WinBuilder.prototype.getResult = function() {
+		return this.phone;
+	}
+
+	function AndroidBuilder() {
+		this.phone = new Android();
+	}
+
+	AndroidBuilder.prototype.builderScreen = function() {
+		this.phone.screen += "Android  screen "
+	}
+
+	AndroidBuilder.prototype.builderCpu = function() {
+		this.phone.cpu += "Android  cpu "
+	}
+
+	AndroidBuilder.prototype.builderBattery = function() {
+		this.phone.battery += "Android  battery "
+	}
+
+	AndroidBuilder.prototype.getResult = function() {
+		return this.phone;
+	}
+
+	function IphoneBuilder() {
+		this.phone = new IPhone();
+	}
+
+	IphoneBuilder.prototype.builderScreen = function() {
+		this.phone.screen += "IPhone phone screen "
+	}
+
+	IphoneBuilder.prototype.builderCpu = function() {
+		this.phone.cpu += "IPhone phone cpu "
+	}
+
+	IphoneBuilder.prototype.builderBattery = function() {
+		this.phone.battery += "IPhone phone battery "
+	}
+
+	IphoneBuilder.prototype.getResult = function() {
+		return this.phone;
+	}
+
+	var director = {
+		create : function(builder) {
+			builder.builderScreen();
+			builder.builderCpu();
+			builder.builderBattery();
+
+			return builder.getResult();
+		}
+	}
+
+
+	
+	
+/**************************************client*********************************/
+	var p = director.create(new WinBuilder());
+	var x = director.create(new AndroidBuilder());
+	var t = director.create(new IphoneBuilder());
+
+	$('#info').append(p.description());
+	$('#info').append(x.description());
+	$('#info').append(t.description());
+</script>

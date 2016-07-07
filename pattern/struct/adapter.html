@@ -1,0 +1,65 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+适配器模式
+将一个类的接口转换成客户希望的另外一个接口，使得原本不能一起工作的那些类可以一起工作
+示例：适配中国人与外国人打招呼和付款
+</div>
+<div id='info'></div>
+<script>
+	/*定义接口
+	function Person() {
+	 	string hello() 
+		string pay() 
+	}
+
+	*/
+	//实现Person接口
+	function Foreigner() {
+		this.hello = function() {
+			return 'hello<br/>';
+		}
+		//单位美元
+		this.pay = function(money) {
+			return "$"+money +'<br/>' 
+		}
+	}
+
+	//实现Person接口
+	function Translator(ch) {
+		this.chinese = ch;
+
+		this.hello = function() {
+			return this.chinese.你好();
+		}
+
+		this.pay = function(money) {
+			var money = this.chinese.pay(money).split('').slice(1).slice(0, -5).join('');
+			return "$"+ (money / this.chinese.rate) +'<br/>'
+		}
+	}
+
+	function Chinese() {
+		this.rate = 6
+		this.你好 = function() {
+			return '你好<br/>'
+		}
+
+		//money元
+		this.pay = function(money) {
+			return "￥"+ money  +'<br/>'
+		}
+	}
+
+/******************************client*********************************/
+	var 张 = new Chinese();
+	var zl = new Foreigner();
+
+	var translator = new Translator(张);
+
+	$('#info').append(translator.hello());
+	$('#info').append(translator.pay(12));
+	
+	$('#info').append(zl.hello());
+	$('#info').append(zl.pay(12));
+</script>

@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset='utf-8' />
+</head>
+<body>
+</body>
+<script>
+
+function People(name, age) {
+	this.id = Math.random();
+	this.lenders = [];
+	this.name = name || '';
+	this.age = age || 0;
+}
+
+//借钱给别人  type: 0 债主  1 欠债的人
+People.prototype.lend = function(people, money, remark) {
+	if(this.id == people.id) return ;
+	var _this = this;
+	this.lenders.push({'people': people, money: money, remark: remark, created_at : new Date(), type:0});
+	people.lenders.push({'people': _this, money: money, remark: remark, created_at : new Date(), type:1})
+}
+
+People.prototype.show = function() {
+	console.log('======='+this.name+'记录 开始=============')
+	this.lenders.forEach(function(item) {
+		item.type == 0 ? console.log("我在"+ item.created_at +"借了" +  item.money + "元给" + item.people.name)
+		: console.log("我在"+ item.created_at +"向" + item.people.name + "借了" +  item.money + "元")
+	});
+	
+	console.log('======='+this.name+'记录 结束=============')
+}
+
+var foo = new People('foo', 20, '看病');
+var bar = new People('bar', 25, '读书');
+var baz = new People('baz', 38, '上网');
+
+foo.lend(bar, 2000);
+bar.lend(baz, 2000);
+baz.lend(foo, 2000);
+
+foo.show();
+bar.show();
+baz.show();
+
+/*=============================================================*/
+mediator = function() {
+	var instance = null;
+	
+	function Mediator() {
+		this.id = Math.random();
+		this.lendRecord = [];	
+	}
+	
+	Mediator.prototype.handlerLend = function(creditor, debtor, money, remark) {
+		if(creditor.id == debtor.id) return;
+		this.lendRecord.push({creditor : creditor, debtor : debtor, money: money, remark: remark, created_at : new Date()});
+	}
+
+	Mediator.prototype.show = function() {
+		console.log('======='+ this.id +'记录 开始=============')
+		this.lendRecord.forEach(function(item) {
+			console.log(item.creditor.name + '在' + item.created_at + '借了' + item.money + '给' + item.debtor.name );
+		})
+		console.log('======='+ this.id +'记录 结束=============')
+	}
+	
+	return {
+		instance : instance || (instance = new Mediator())
+	}
+}()
+
+mediator.instance.handlerLend(foo, bar, 2000, '看病');
+mediator.instance.handlerLend(bar, baz, 2000, '读书');
+mediator.instance.handlerLend(baz, foo, 2000, '上网');
+
+mediator.instance.show();
+</script>

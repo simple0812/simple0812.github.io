@@ -1,0 +1,251 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+</body>
+<script>
+	var LIFT_STATE_ENUM = {
+		opening : 1,
+		running : 2,
+		stopping : 3,
+		closing : 4
+	}
+	
+	function Lift() {
+		this.state = LIFT_STATE_ENUM.closing;
+	}
+	
+	Lift.prototype.setState = function(state) {
+		this.state = state;
+	}
+	
+	Lift.prototype.getState = function() {
+		return this.state;
+	}
+	
+	Lift.prototype.open = function() {
+		switch(this.state) {
+			case LIFT_STATE_ENUM.opening :
+				break;
+			case LIFT_STATE_ENUM.running :
+				console.log('lift is running can not open');
+				break;
+			case LIFT_STATE_ENUM.stopping :
+				console.log('lift open success')
+				this.setState(LIFT_STATE_ENUM.opening);
+				break;
+			case LIFT_STATE_ENUM.closing :
+				console.log('lift open success')
+				this.setState(LIFT_STATE_ENUM.opening);
+				break;
+			default :
+				break;
+		}
+	}
+	
+	Lift.prototype.close = function() {
+		switch(this.state) {
+			case LIFT_STATE_ENUM.opening :
+				console.log('lift close success')
+				this.setState(LIFT_STATE_ENUM.closing);
+				break;
+			case LIFT_STATE_ENUM.running :
+				console.log('lift is running can not clsoe')
+				break;
+			case LIFT_STATE_ENUM.stopping :
+				console.log('lift close success')
+				this.setState(LIFT_STATE_ENUM.closing);
+				break;
+			case LIFT_STATE_ENUM.closing :
+				break;
+			default :
+				break;
+		}
+	}
+	
+	Lift.prototype.run = function() {
+		switch(this.state) {
+			case LIFT_STATE_ENUM.opening :
+				console.log('lift is running can not run')
+				break;
+			case LIFT_STATE_ENUM.running :
+				break;
+			case LIFT_STATE_ENUM.stopping :
+				console.log('lift run success')
+				this.setState(LIFT_STATE_ENUM.running);
+				break;
+			case LIFT_STATE_ENUM.closing :
+				console.log('lift run success')
+				this.setState(LIFT_STATE_ENUM.running);
+				break;
+			default :
+				break;
+		}
+	}
+	
+	Lift.prototype.stop = function() {
+		switch(this.state) {
+			case LIFT_STATE_ENUM.opening :
+				break;
+			case LIFT_STATE_ENUM.running :
+				console.log('lift stop success')
+				this.setState(LIFT_STATE_ENUM.stopping);
+				break;
+			case LIFT_STATE_ENUM.stopping :
+				break;
+			case LIFT_STATE_ENUM.closing :
+				break;
+			default :
+				break;
+		}		
+	}
+	
+	var lift = new Lift();
+	lift.open();
+	lift.close();
+	lift.run();
+	lift.stop();
+	console.log('/*============================================================================*/')
+	
+	/*============================================================================*/
+
+	function Context() {
+		this.state = null;
+		this.setState = function(state) {
+			switch(state) {
+				case LIFT_STATE_ENUM.opening :
+					this.state = new OpeningState(this);
+					break;
+				case LIFT_STATE_ENUM.closing :
+					this.state = new ClosingState(this);
+					break;
+				case LIFT_STATE_ENUM.running :
+					this.state = new RunningState(this);
+					break;
+				case LIFT_STATE_ENUM.stopping :
+					this.state = new StoppingState(this);
+					break;
+				default :
+					this.state = new ClosingState(this);
+					break;
+			}
+		}
+		
+		this.getState = function() {
+			return this.state;
+		}
+		
+		this.open = function() {
+			this.state.open();
+		}
+		
+		this.close = function() {
+			this.state.close();
+		}
+		
+		this.run = function() {
+			this.state.run();
+		}
+		
+		this.stop = function() {
+			this.state.stop();
+		}
+	}
+	
+	function OpeningState(context) {
+		this.context = context;
+
+		this.open = function() {
+			
+		}
+		
+		this.close = function() {
+			console.log('lift open success')
+			this.context.setState(LIFT_STATE_ENUM.closing);
+		}
+		
+		this.run = function() {
+			console.log('lift is running can not open')
+		}
+		
+		this.stop = function() {
+			console.log('lift open success')
+			this.context.setState(LIFT_STATE_ENUM.stopping);
+		}
+	}
+	
+	function ClosingState(context) {
+		this.context = context;
+		
+		this.open = function() {
+			console.log('lift close success')
+			this.context.setState(LIFT_STATE_ENUM.opening);
+		}
+		
+		this.close = function() {
+		
+		}
+		
+		this.run = function() {
+			console.log('lift is running can not close');
+		}
+		
+		this.stop = function() {
+			console.log('lift close success')
+			this.context.setState(LIFT_STATE_ENUM.stopping);
+		}
+	}
+	
+	function RunningState(context) {
+		this.context = context;
+		
+		this.open = function() {
+			console.log('lift is running can not open')
+		}
+		
+		this.close = function() {
+			console.log('lift is running can not close')
+		}
+		
+		this.run = function() {
+		
+		}
+		
+		this.stop = function() {
+			console.log('lift stop success')
+			this.context.setState(LIFT_STATE_ENUM.stopping);
+		}
+	}
+	
+	function StoppingState(context) {
+		this.context = context;
+		
+		this.open = function() {
+			console.log('lift open  success')
+			this.context.setState(LIFT_STATE_ENUM.opening);
+		}
+		
+		this.close = function() {
+			console.log('lift close  success')
+			this.context.setState(LIFT_STATE_ENUM.closing);
+		}
+		
+		this.run = function() {
+			console.log('lift run  success')
+			this.context.setState(LIFT_STATE_ENUM.running);
+		}
+		
+		this.stop = function() {
+		
+		}
+	}
+	
+	var context = new Context();
+	context.setState(LIFT_STATE_ENUM.closing);
+	context.open();
+	context.close();
+	context.run();
+	context.stop();
+	
+</script>
+
+</html>

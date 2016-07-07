@@ -1,0 +1,114 @@
+<script src='/js/jquery.js'></script>
+<script src='/js/utils.js'></script>
+<meta charset="utf-8" />
+<div>
+装饰者模式 ：
+动态地将责任附加到对象上.若要扩展功能,装饰者提供了比继承更有弹性的替代方案。<br/>
+示例：游戏镶嵌宝石
+</div>
+<div id='info'></div>
+<script>
+	/*定义接口
+	function Component() {
+	 	void attack() 
+	 	float calcAttack() 
+	 	float calcCritRate() 
+	}
+
+	*/
+	function Monster(name, hp) {
+		this.name = name;
+		this.atk = 5; 
+		this.hp = hp || 100;
+		this.die = function() {
+			this.hp = 0;
+			return utils.format('{0}死亡了', this.name);
+		}
+		this.isDie = function() {
+			return this.hp <= 0;
+		}
+	}
+
+	function Weapon() {
+		this.atk = 10; //攻击力
+		this.critRate = 0.1;
+	}
+
+	Weapon.prototype.attack = function(monster) {
+		// monster.hp -= this.calcAttack();
+		var random = Math.random();
+		if(random > this.calcCritRate()) {
+			console.log('普通伤害' + this.calcAttack())
+			return this.calcAttack();
+		}
+		console.warn('暴击伤害' + this.calcAttack() * (1 + this.calcCritRate()))
+		monster.hp -= this.calcAttack() * (1 + this.calcCritRate());
+	}
+
+	Weapon.prototype.calcAttack = function() {
+		return this.atk
+	}
+
+	Weapon.prototype.calcCritRate = function() {
+		return this.critRate
+	}
+
+
+	/*装饰者基类*/
+	function Decorator(weapon) {
+		this.weapon = weapon;
+	}
+
+	Decorator.prototype.attack = function(monster) {
+		var random = Math.random();
+		if(random > this.calcCritRate()) {
+			console.log('普通伤害' + this.calcAttack())
+			return this.calcAttack();
+		}
+		console.warn('暴击伤害' + this.calcAttack() * (1 + this.calcCritRate()))
+		monster.hp -= this.calcAttack() * (1 + this.calcCritRate());
+	}
+
+	Decorator.prototype.calcAttack = function() {
+		return this.weapon.calcAttack();
+	}
+
+	Decorator.prototype.calcCritRate = function() {
+		return this.weapon.calcCritRate();
+	}
+
+
+	//镶嵌 +3攻击
+	function RubyDecorator(weapon) {
+		Decorator.call(this, weapon);
+	}
+	utils.extend(RubyDecorator, Decorator);
+
+	RubyDecorator.prototype.calcAttack = function() {
+		return this.weapon.calcAttack() + 3; 
+	}
+
+	//附魔 20%暴击
+	function MagicDecorator(weapon) {
+		Decorator.call(this, weapon);
+	}
+	utils.extend(MagicDecorator, Decorator);
+
+	MagicDecorator.prototype.calcCritRate = function() {
+		return this.weapon.calcCritRate() + 0.3; 
+	}
+	
+/******************************client*********************************/
+	var m = new Monster("m", 300);
+
+	var w = new Weapon();
+	w = new RubyDecorator(w);
+	w = new RubyDecorator(w);
+	w = new MagicDecorator(w);
+
+	while(!m.isDie()) {
+		w.attack(m)
+	}
+
+	console.log(m.die())
+</script>

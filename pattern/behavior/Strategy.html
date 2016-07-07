@@ -1,0 +1,38 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+策略模式
+定义一系列的算法,把每一个算法封装起来, 并且使它们可相互替换<br/>
+示例:商城优惠活动
+</div>
+<div id='info'></div>
+<script>
+	/*定义接口
+	function CouponStrategy() {
+		float calc(float money);
+	}
+	*/
+	/*折扣*/
+	function DiscountCoupon(rate) {
+		this.rate = rate;
+		this.calc = function(money) {
+			return this.rate * money;
+		}
+	}
+
+	/*返现*/
+	function CashBackCoupon(point, back) {
+		this.point = point;
+		this.back = back;
+		this.calc = function(money) {
+			return money >= point ? money - back : money;
+		}
+	}
+
+	/******************************client*********************************/
+	var discount = new DiscountCoupon(0.8);
+	var cashback = new CashBackCoupon(600, 100);
+
+	$('#info').append(discount.calc(1000) + '元<br/>');
+	$('#info').append(cashback.calc(1000) + '元<br/>');
+</script>

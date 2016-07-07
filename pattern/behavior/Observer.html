@@ -1,0 +1,111 @@
+<script src='/js/jquery.js'></script>
+<script src='/js/underscore.js'></script>
+<meta charset="utf-8" />
+<div>
+观察者模式
+有时被称作发布/订阅模式，观察者模式定义了一种一对多的依赖关系，让多个观察者对象同时监听某一个主题对象。这个主题对象在状态发生变化时，会通知所有观察者对象，使它们能够自动更新自己。<br/>
+示例:学生放哨,发现老师后提醒同学
+</div>
+<div id='info'></div>
+<script>
+	var STATUS_IN_CLASS = {
+		idle : '无所事事',
+		study : '学习',
+		sleep : '睡觉',
+		read : '看小说',
+		sing : '唱歌'
+	}
+
+	var STUDENTS = [
+		new Student('zl'),
+		new Student('lilei'),
+		new Student('hanmeimei'),
+		new Student('lily'),
+		new Student('json')
+	];
+
+	function Student(name) {
+		this.name = name;
+		this.status = STATUS_IN_CLASS.idle;
+	}
+
+	Student.prototype.setStatus = function(status) {
+		this.status = status;
+	}
+
+	Student.prototype.alarm = function() {
+		this.setStatus(STATUS_IN_CLASS.study);
+	}
+
+	Student.prototype.clearAlarm = function() {
+		this.setStatus(STATUS_IN_CLASS.idle);
+	}
+
+	function Observer(name) {
+		this.name = name;
+		this.students = [];
+	}
+
+	Observer.prototype.alarm = function() {
+		console.log('老师来了')
+		this.students.forEach(function(item) {
+			item.alarm();
+		})
+	}
+
+	Observer.prototype.clearAlarm = function() {
+		console.log('老师走了')
+		this.students.forEach(function(item) {
+			item.clearAlarm();
+		})
+	}
+
+
+	Observer.prototype.attach = function(student) {
+		if(!student) return;
+		this.students.push(student);
+	}
+
+	Observer.prototype.detach = function(student) {
+		this.students = _.reject(this.students, function(item) {
+			return item.name == student.name;
+		})
+	}
+
+	var Teacher = {
+		lookOver : function() {
+			STUDENTS.forEach(function(item) {
+				if(item.status == STATUS_IN_CLASS.study) {
+					console.log(item.name +'在' + item.status +' ,前途无量啊')
+				} else {
+					console.warn(item.name +'在' + item.status + ' ,无可救药')
+				}
+			})
+		}
+	}
+	
+	function getByName(name) {
+		return _.find(STUDENTS, function(item) { return item.name == name});
+	}
+
+	/******************************client*********************************/
+	var zl =getByName('zl');
+	zl.setStatus(STATUS_IN_CLASS.study);
+	var lilei = getByName('lilei')
+	lilei.setStatus(STATUS_IN_CLASS.sleep);
+	var hanmeimei = getByName('hanmeimei')
+	hanmeimei.setStatus(STATUS_IN_CLASS.sing);
+	Teacher.lookOver();
+
+	console.log('json开始监视老师................................')
+	//json监视老师
+	var json = new Observer('json');
+	STUDENTS.forEach(function(item) {
+		json.attach(item);
+	})
+
+	json.detach(getByName('lily'));
+	json.alarm();
+
+	Teacher.lookOver();
+</script>

@@ -1,0 +1,68 @@
+<script src='/js/jquery.js'></script>
+<script src='/js/utils.js'></script>
+<meta charset="utf-8" />
+<div>
+桥接模式：
+将抽象部分与实现部分分离，使它们都可以独立的变化。减少因变化带来的代码的修改量。<br/>
+使用继承会导致类型爆炸
+实例：文字的颜色
+</div>
+<div id='info'></div>
+<script>
+// 	function Font(txt){
+// 		this.txt = txt;
+// 	}
+
+// 	Font.prototype.render = function() {
+// 		return '<p>' + this.txt + '</p>'
+// 	}
+
+// 	function RedFont(txt) {
+// 		var args = [].slice.call(arguments,0);
+// 		Font.call(this, args)
+// 	}
+// 	utils.extend(RedFont, Font)
+
+// 	RedFont.prototype.render = function() {
+// 		return '<p style="color:red">' + this.txt + '</p>'
+// 	}
+
+// 	function BlueFont(txt) {
+// 		var args = [].slice.call(arguments,0);
+// 		Font.call(this, args)
+// 	}
+// 	utils.extend(BlueFont, Font)
+
+// 	BlueFont.prototype.render = function() {
+// 		return '<p style="color:blue">' + this.txt + '</p>'
+// 	}
+
+// /******************************client*********************************/
+// 	var red = new RedFont('LiLei');
+// 	var blue = new BlueFont('LiLei');
+// 	$('#info').append(red.render());
+// 	$('#info').append(blue.render());
+
+
+
+	function Font(txt, color){
+		this.txt = txt;
+		this.color = color || new Color('black');
+		this.render = function() {
+			return '<p style="color:'+ this.color.color +'">' + this.txt + '</p>'
+		}
+	}
+
+	function Color(color) {
+		this.color = color;
+	}
+
+
+/******************************client*********************************/
+	var red = new Color('red');
+	var blue = new Color('blue');
+	$('#info').append(new Font('aaaa').render());
+	$('#info').append(new Font('aaaa', red).render());
+	$('#info').append(new Font('aaaa', blue).render());
+
+</script>

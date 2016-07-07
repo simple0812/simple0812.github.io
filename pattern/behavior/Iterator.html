@@ -1,0 +1,58 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+迭代器模式
+提供一种方法顺序访问一个聚合对象中的各种元素，而又不暴露该对象的内部表示<br/>
+示例:商城优惠活动
+</div>
+<div id='info'></div>
+<script>
+	/*定义接口
+	function Iterator() {
+		object first()
+		object next()
+		bool isDone()
+		object currrentItem()
+	}
+	*/
+	
+	function Collection(arr) {
+		var _arr = arr || [];
+		var _index = -1;
+		function Collection() {
+
+		}
+
+		Collection.prototype.first = function() {
+			return _arr[0];
+		}
+
+		Collection.prototype.next = function() {
+			if(this.isDone()) return null;
+			_index ++;
+			return _arr[_index];
+		}
+
+		Collection.prototype.isDone = function() {
+			return _index >= _arr.length;
+		}
+
+		Collection.prototype.currentItem = function() {
+			return _arr[_index];
+		}
+
+		return new Collection();
+	}
+	/******************************client*********************************/
+
+	var arr = ['one', 'two', 'three']
+	var coll = new Collection(arr);
+
+	$('#info').append('isDone ' + coll.isDone() + '<br/>');
+	
+	while(coll.next()) {
+		$('#info').append(coll.currentItem() + '<br/>');
+	}
+
+	$('#info').append('isDone ' +coll.isDone() + '<br/>');
+</script>

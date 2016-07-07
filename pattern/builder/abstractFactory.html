@@ -1,0 +1,92 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+抽象工厂模式:
+向客户端提供一个接口，使客户端在不必指定产品的具体的情况下，创建多个产品系列中的产品对象
+示例：
+</div>
+<div id='info'></div>
+<script>
+
+	/*定义dog接口
+	function Dog() {
+		void wang()
+	}
+	*/
+	function WoodDog() {
+	}
+
+	WoodDog.prototype.wang = function() {
+		return "i am wood dog<br/>"
+	}
+
+	function PlasticDog() {
+	}
+
+	PlasticDog.prototype.wang = function() {
+		return "i am plastic dog<br/>"
+	}
+
+	/*定义cat接口
+	function Cat() {
+		void miao()
+	}
+	*/
+
+	function WoodCat() {
+	}
+
+	WoodCat.prototype.miao = function() {
+		return "i am wood cat<br/>"
+	}
+
+	function PlasticCat() {
+	}
+
+	PlasticCat.prototype.miao = function() {
+		return "i am plastic cat <br/>"
+	}
+
+	/*定义抽象工厂接口
+	function IFactory() {
+		Dog createDog() 
+		Cat createCat()
+	}*/
+
+
+	function WoodFactory() {
+
+	}
+
+	WoodFactory.prototype.createDog = function() {
+		return new WoodDog();
+	}
+
+	WoodFactory.prototype.createCat = function() {
+		return new WoodCat();
+	}
+
+	function PlasticFactory() {
+
+	}
+
+	PlasticFactory.prototype.createDog = function() {
+		return new PlasticDog();
+	}
+
+	PlasticFactory.prototype.createCat = function() {
+		return new PlasticCat();
+	}
+
+
+	
+/**************************************client*********************************/
+	var factory = new WoodFactory();
+	var cat = factory.createCat();
+
+	var factory1 = new PlasticFactory();
+	var dog = factory1.createDog();
+
+	$('#info').append(cat.miao());
+	$('#info').append(dog.wang());
+</script>

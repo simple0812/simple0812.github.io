@@ -1,0 +1,58 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+代理模式：
+为其他对象提供一种代理以控制这个对象的访问。解决直接访问某些对象是出现的问题。
+
+示例：男孩通过花店送花给女孩
+</div>
+<div id='info'></div>
+<script>
+	/*定义接口
+	function ILove() {
+		string sendFlower()
+	}
+	*/
+	function Boy(name) {
+		this.name = name;
+		this.sendFlower = function(girl) {
+			return this.name + ':美丽的姑娘' + girl.name +', 这朵鲜花送个你<br/>';
+		}
+	}
+
+	function Girl(name) {
+		this.name = name;
+	}
+
+	//虚拟代理
+	function FlowerShopex() {
+		this.boy = null;
+
+		this.sendFlower = function(girl) {
+			this.boy = this.boy || new Boy("default");
+		    return this.boy.sendFlower(girl)
+		}
+	}
+
+	function FlowerShop(boy) {
+		this.boy = boy;
+
+		this.sendFlower = function(girl) {
+			//保护代理
+			// if(girl.name == 'HanMeiMei') {
+			// 	return 'this girl has no permission'
+			// }
+
+		    return this.boy.sendFlower(girl)
+		}
+	}
+
+/******************************client*********************************/
+	var boy = new Boy('LiLei');
+	var girl = new Girl('HanMeiMei');
+	var shop = new FlowerShop(boy);
+	
+	$('#info').append(shop.sendFlower(girl));
+	$('#info').append(new FlowerShopex().sendFlower(girl));
+	$('#info').append(new FlowerShopex().sendFlower(girl));
+</script>

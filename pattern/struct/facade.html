@@ -1,0 +1,81 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+外观模式
+通过引入一个外观角色来简化客户端与子系统之间的交互，为复杂的子系统调用提供一个统一的入口，降低子系统与客户端的耦合度，且客户端调用非常方便
+示例：kfc 外观模式
+</div>
+<div id='info'></div>
+<script>
+var kfc = {
+	createKeLe : function() {
+		return "可乐";
+	},
+	createNaiCha : function() {
+		return "奶茶";
+	},
+	createJiChi : function() {
+		return "鸡翅";
+	},
+	createJiTui : function() {
+		return "鸡腿";
+	},
+	createNiuRouHanBao : function() {
+		return "牛肉汉堡";
+	},
+	createJiRouHanBao : function() {
+		return "鸡肉汉堡";
+	},
+	createShuTiao : function() {
+		return "薯条";
+	},
+	createYuMi : function() {
+		return "玉米";
+	},
+
+	
+}
+
+//外观模式
+var mealFacade = {
+	/*
+	全家桶:3份鸡翅 2份牛肉汉堡 2份薯条 4份可乐
+	*/
+	quanJiaTong: function() {
+		var ret = [];
+		ret.push(kfc.createJiChi());
+		ret.push(kfc.createJiChi());
+		ret.push(kfc.createJiChi());
+		ret.push(kfc.createNiuRouHanBao());
+		ret.push(kfc.createNiuRouHanBao());
+		ret.push(kfc.createShuTiao());
+		ret.push(kfc.createShuTiao());
+		ret.push(kfc.createKeLe());
+		ret.push(kfc.createKeLe());
+		ret.push(kfc.createKeLe());
+		ret.push(kfc.createKeLe());
+		
+		return ret.join(',');
+	},
+
+	/*
+	套餐1:1份鸡翅 1份牛肉汉堡 1份薯条 1份可乐
+	*/
+	mealOne: function() {
+		var ret = [];
+		ret.push(kfc.createJiChi());
+		ret.push(kfc.createNiuRouHanBao());
+		ret.push(kfc.createShuTiao());
+		ret.push(kfc.createKeLe());
+
+		return ret.join(',');
+	}
+}
+
+/******************************client*********************************/
+var quanJiaTong = mealFacade.quanJiaTong();
+var mealOne = mealFacade.mealOne();
+
+$('#info').append(quanJiaTong + '<br/>');
+$('#info').append(mealOne + '<br/>');
+</script>

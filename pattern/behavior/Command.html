@@ -1,0 +1,120 @@
+<script src='/js/jquery.js'></script>
+<script src='/js/underscore.js'></script>
+<meta charset="utf-8" />
+<div>
+命令模式
+将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以提供命令的撤销和恢复功能<br/>
+示例:大排档点餐
+</div>
+<div id='info'></div>
+<script>
+	function Waiter(name) {
+		this.name = name;
+		this.orders = [];
+	}
+
+	Waiter.prototype.submit = function() {
+		this.orders.forEach(function(item) {
+			item.exec();
+		})
+	}
+
+	Waiter.prototype.addOrder = function(order) {
+		this.orders.push(order);
+	}
+
+	Waiter.prototype.cancelOrder = function(order) {
+		this.orders = _.reject(this.orders, function(item) {
+			return item == order;
+		})
+	}
+
+	function Chef(name) {
+		this.name = name;
+	}
+
+	//饭
+	Chef.prototype.doFan = function() {
+		console.log('炒饭做好了')
+		return "炒饭做好了";
+	}
+
+	//面
+	Chef.prototype.doMian = function() {
+		console.log('炒面做好了')
+		return "炒面做好了";
+	}
+
+	//羊肉串
+	Chef.prototype.kaoYRC = function() {
+		console.log('羊肉串烤好了')
+		return "羊肉串烤好了";
+	}
+
+	//烤鸡翅
+	Chef.prototype.kaoJC = function() {
+		console.log('鸡翅烤做好了')
+		return "鸡翅烤做好了";
+	}
+
+	//烤鸡腿
+	Chef.prototype.kaoJT = function() {
+		console.log('鸡腿烤好了')
+		return "鸡腿烤好了";
+	}
+
+	/*命令抽象类
+	function Command(chef) {
+		void exec()
+	}*/
+
+	function FanCommand(chef) {
+		this.chef = chef;
+		this.exec = function() {
+			this.chef.doFan();
+		}
+	}
+
+	function MianCommand(chef) {
+		this.chef = chef;
+		this.exec = function() {
+			this.chef.doMian();
+		}
+	}
+
+	function YRCCommand(chef) {
+		this.chef = chef;
+		this.exec = function() {
+			this.chef.kaoYRC();
+		}
+	}
+
+	function JCCommand(chef) {
+		this.chef = chef;
+		this.exec = function() {
+			this.chef.kaoJC();
+		}
+	}
+
+	function JTCommand(chef) {
+		this.chef = chef;
+		this.exec = function() {
+			this.chef.kaoJT();
+		}
+	}
+
+	/******************************client*********************************/
+	var lilei = new Chef("lilei");
+	var hanmeimei = new Waiter("hanmeimei");
+	
+	var pCmd = new JTCommand(lilei);
+
+	hanmeimei.addOrder(pCmd);
+	hanmeimei.addOrder(new FanCommand(lilei));
+	hanmeimei.addOrder(new MianCommand(lilei));
+	hanmeimei.addOrder(new YRCCommand(lilei));
+	hanmeimei.addOrder(new JCCommand(lilei));
+	hanmeimei.cancelOrder(pCmd);
+
+	hanmeimei.submit();
+</script>

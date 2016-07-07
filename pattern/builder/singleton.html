@@ -1,0 +1,102 @@
+<script src='/js/jquery.js'></script>
+<meta charset="utf-8" />
+<div>
+单列模式：
+保证一个类只有一个实例，并提供一个访问它的全局访问点
+示例：创建一个phone
+</div>
+<div id='info'></div>
+<script>
+	function Phone() {
+		this.brand = "samsung";
+		this.os="android"
+		this.size="5.1"
+		this.screenResolution="720p"
+	}
+
+	Phone.prototype.description = function() {
+		var p = ""
+		for(var each in this) {
+			if(typeof(this[each]) == 'function') continue;
+			p += this[each] + ' ';
+		}
+		p +="<br/>";
+
+		return p;
+	}
+
+	var phone = {
+		brand: 'apple',
+		os: 'ios',
+		size: '5.4',
+		screenResolution: '1080p',
+		description : function() {
+			var p = ""
+			for(var each in this) {
+				if(typeof(this[each]) == 'function') continue;
+				p += this[each] + ' ';
+			}
+			p +="<br/>";
+
+			return p;
+		}
+	}
+
+	var phonex = (function(window) {
+		var instance = null;
+		function Constructor() {
+			this.brand = "microsoft";
+			this.os="windows";
+			this.size="5.2";
+			this.screenResolution="2k";
+		}
+
+		Constructor.prototype.description = function() {
+			var p = ""
+			for(var each in this) {
+				if(typeof(this[each]) == 'function') continue;
+				p += this[each] + ' ';
+			}
+			p +="<br/>";
+
+			return p;
+		}
+
+		return {
+			getInstance : function() {
+				if(instance) return instance;
+				return new Constructor();
+			}
+		}
+	})(window)
+
+	var Phonex = (function() {
+
+	    var instance = null;
+
+	     function Phonex () {
+	        if (instance) {
+	            return instance;
+	        }
+
+	        instance = this;
+
+	        this.brand = "microsoft";
+			this.os="windows";
+			this.size="5.2";
+			this.screenResolution="2k";
+	    };
+
+	    return Phonex
+	})();
+
+
+/******************************client*********************************/
+	var p = new Phone();
+	
+	$('#info').append(p.description());
+	$('#info').append(phone.description());
+	$('#info').append(phonex.getInstance().description());
+	console.log(new Phonex() == new Phonex(), new Phonex())
+
+</script>

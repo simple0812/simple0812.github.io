@@ -1,0 +1,103 @@
+<script src='/js/jquery.js'></script>
+<script src='/js/underscore.js'></script>
+<meta charset="utf-8" />
+<div>
+组合模式
+又叫做部分-整体模式，一般用来处理类似树形结构的问题。它模糊处理元素与部分整体，使得客户端能够统一处理简单或者复杂的元素，从而使得客户端程序同元素的结构之间解耦<br/>
+</div>
+<div id='info'></div>
+<script>
+	/*定义接口
+	function Component() {
+		string name
+		int status 
+		int createdAt
+		int updatedAt
+
+	 	void add() 
+	 	void remove() 
+		Component[] get() 
+	}
+
+	*/
+	//实现Component接口
+	function Leaf(name) {
+		this.name = name;
+		this.content='';
+		this.status = 1; //是否删除
+		this.createdAt = new Date().getTime();
+		this.updatedAt = new Date().getTime();
+	}
+
+	Leaf.prototype.add = function(str) {
+		this.content += str;
+		this.updatedAt = new Date().getTime();
+	}
+
+	Leaf.prototype.remove = function() {
+		if(this.status == 0) return;
+		
+		this.content = '';
+		this.updatedAt = new Date().getTime();
+		this.status = 0;
+		console.log(this.name + "删除成功");
+	}
+
+	Leaf.prototype.get = function() {
+		return this.content;
+	}
+
+	//实现Component接口
+	function Composite(name) {
+		this.name = name;
+		this.content = [];
+		this.status = 1;
+		this.createdAt = new Date().getTime();
+		this.updatedAt = new Date().getTime();
+	}
+
+	Composite.prototype.add = function(component) {
+		this.content.push(component);
+		this.updatedAt = new Date().getTime();
+	}
+
+	Composite.prototype.remove = function(componentName) {
+		if(this.status == 0) return;
+
+		var p = _.filter(this.content, function(item) {
+				return componentName ? item.status == 1 && item.name == componentName : item.status == 1;
+			})
+
+		if(p && p.length) {
+			p.forEach(function(item) {
+				item.remove();
+			})
+		}
+
+		this.updatedAt = new Date().getTime();
+		this.status = 0;
+		console.log(this.name + "删除成功");
+	}
+
+	Composite.prototype.get = function(componentName) {
+		if(!componentName) return this.content;
+		return _.find(this.content, function(item) {
+			return item.name = componentName;
+		})
+	}
+
+
+
+/******************************client*********************************/
+	var root = new Composite('root')
+	var dir1 = new Composite('dir1');
+	var txt = new Leaf('txt');
+
+	txt.add('txt')
+	root.add(dir1);
+	root.add(txt);
+	txt.add('aaa')
+
+	root.remove();
+	console.log(root)
+</script>

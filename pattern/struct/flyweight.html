@@ -1,0 +1,74 @@
+<script src='/js/jquery.js'></script>
+<script src='/js/utils.js'></script>
+<meta charset="utf-8" />
+<div>
+桥接模式：
+运用共享的技术有效地支持大量细粒度的对象<br/>
+实例：文字的颜色和大小
+</div>
+<div id='info'></div>
+<script>
+	var sizeFactory = {
+		sizes :{},
+		get : function(size) {
+			var p = this.sizes[size];
+			if(!p) {
+				p = new FontSize(size);
+				this.sizes[size] = p;
+			}
+			return p; 
+		}
+	}
+
+	var colorFactory = {
+		colors :{},
+		get : function(color) {
+			var p = this.colors[color];
+			if(!p) {
+				p = new FontColor(color);
+				this.colors[color] = p;
+			}
+			return p; 
+		}
+	}
+
+	function FontSize(size) {
+		this.size = size;
+	}
+
+	function FontColor(color) {
+		this.color = color;
+	}
+
+	function Font(txt, color, size){
+		this.txt = txt;
+		this.color = color || new FontColor('black');
+		this.size = size || new FontSize(12);
+		this.render = function() {
+			return utils.format('<p style="color:{0}; font-size:{1}">{2}</p>', this.color.color, this.size.size, this.txt);
+		}
+	}
+
+/******************************client*********************************/
+	// var red = new FontColor('red');
+	// var blue = new FontColor('blue');
+	// var s16 = new FontSize(16);
+	// var s30 = new FontSize(30);
+
+	var red = colorFactory.get('red');
+	console.log(colorFactory.colors)
+
+	var blue = colorFactory.get('blue');
+	console.log(colorFactory.colors)
+	
+	var s16 = sizeFactory.get(16);
+	var s30 = sizeFactory.get(30);
+
+	$('#info').append(new Font('aaaa').render());
+	$('#info').append(new Font('aaaa', red).render());
+	$('#info').append(new Font('aaaa', blue).render());
+
+	$('#info').append(new Font('aaaa', red, s16).render());
+	$('#info').append(new Font('aaaa', blue, s30).render());
+
+</script>
