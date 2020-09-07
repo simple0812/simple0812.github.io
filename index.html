@@ -61,11 +61,8 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner" onclick="test()">
-          <a id="forkme_banner" href="https://github.com/simple0812">View on GitHub</a>
-
           <h1 id="project_title">Simple0812.GitHub.io</h1>
           <h2 id="project_tagline">hello world</h2>
-
         </header>
     </div>
 
@@ -73,19 +70,4 @@
     
 
   </body>
-
-  <script>
-    window.addEventListener('message', (e) => {
-      let res = e.data;
-
-      if (!res) {
-        return;
-      }
-
-      if (res.type === 'xx') {
-        console.log(res.data);
-        navigator(res.data.navigator)
-      }
-    });
-  </script>
 </html>
