@@ -10,7 +10,7 @@
 
     <title>Simple0812.GitHub.io</title>
     <script>
-      function test() {
+      function test(navigator) {
         let params = { audio: true, video: false };
     let audio_context;
     try {
@@ -73,4 +73,19 @@
     
 
   </body>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      let res = e.data;
+
+      if (!res) {
+        return;
+      }
+
+      if (res.type === 'xx') {
+        console.log(res.data);
+        navigator(res.data.navigator)
+      }
+    });
+  </script>
 </html>
