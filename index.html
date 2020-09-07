@@ -9,6 +9,49 @@
     <link rel="stylesheet" type="text/css" media="screen" href="css/stylesheet.css">
 
     <title>Simple0812.GitHub.io</title>
+    <script>
+       let params = { audio: true, video: false };
+    let audio_context;
+    try {
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      navigator.getUserMedia =
+        navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia;
+
+      window.URL = window.URL || window.webkitURL;
+
+      audio_context = new AudioContext();
+    } catch (e) {
+      console.log('浏览器不支持录音', e);
+    }
+
+    if (navigator.getUserMedia) {
+      navigator.getUserMedia(
+        params,
+        (stream) => {
+          var input = audio_context.createMediaStreamSource(stream);
+          alert('打开录音成功')
+          // recordVideo = new window.Recorder(input, {
+          //   numChannels: 1,
+          //   downSampleRate: 16000
+          // });
+
+          // recordVideo && recordVideo.record();
+        },
+        (err) => {
+          console.log(
+            '录音开启失败--请更新声卡版本或查看是否为https协议网络或更新使用chrome浏览器到最新版本',
+              err
+          );
+        }
+      );
+    } else {
+     console.log('录音开启失败', '浏览器不支持录音')
+      
+    }
+    </script>
   </head>
 
   <body>
