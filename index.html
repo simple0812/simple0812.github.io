@@ -10,7 +10,8 @@
 
     <title>Simple0812.GitHub.io</title>
     <script>
-       let params = { audio: true, video: false };
+      function test() {
+        let params = { audio: true, video: false };
     let audio_context;
     try {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -51,6 +52,7 @@
      console.log('录音开启失败', '浏览器不支持录音')
       
     }
+      }
     </script>
   </head>
 
@@ -58,7 +60,7 @@
 
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
-        <header class="inner">
+        <header class="inner" onclick="test()">
           <a id="forkme_banner" href="https://github.com/simple0812">View on GitHub</a>
 
           <h1 id="project_title">Simple0812.GitHub.io</h1>
